@@ -12,8 +12,8 @@
         <div class="ant-layout-header">
             <div class="logo" style="float: left; width: 120px; height: 31px; margin: 16px 24px 16px 0; background: rgba(255, 255, 255, 0.2);"></div>
             <div class="ant-menu ant-menu-dark ant-menu-horizontal" style="line-height: 64px;">
-                <a href="/blog" class="ant-menu-item">Blog</a>
-                <a href="/blog/category" class="ant-menu-item">Catégorie</a>
+                <a href="/" class="ant-menu-item">Blog</a>
+                <a href="/category" class="ant-menu-item">Catégorie</a>
             </div>
         </div>
     </header>
