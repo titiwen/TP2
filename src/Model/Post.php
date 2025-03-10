@@ -40,4 +40,9 @@ class Post{
         return htmlentities($this->slug);
     }
 
+    public function getFormattedContent(): ?string
+    {
+        return nl2br(htmlentities($this->content));
+    }
+
 }
