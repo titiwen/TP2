@@ -7,6 +7,7 @@ use DateTime;
 class Post{
     private $id;
     private $name;
+    private $slug;
     private $content;
     private $created_at;
     private $categories = [];
