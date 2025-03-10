@@ -2,11 +2,11 @@
 
 require dirname(__DIR__).'/vendor/autoload.php';
 
+use App\Connection;
+
 $faker = Faker\Factory::create('fr_FR');
 
-$pdo = new PDO('mysql:host=127.0.0.1;dbname=tutoblog', 'root', 'root', [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-]);
+$pdo = Connection::getPDO();
 
 $pdo->exec('SET FOREIGN_KEY_CHECKS = 0');
 $pdo->exec('Truncate TABLE post_category');
