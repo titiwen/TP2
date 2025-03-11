@@ -3,6 +3,7 @@
 use App\Connection;
 use App\Model\Category;
 use App\Model\Post;
+use App\PaginatedQuery;
 use App\URL;
 
 $id = (int)$params['id'];
@@ -32,31 +33,34 @@ if($category->getSlug() !== $slug)
 
 $title = "Catégorie : {$category->getName()}";
 
-$page = $_GET['page'] ?? 1;
+/**
+ * Paramètres qui varient : 
+ * $sqlListing: string
+ * $classMapping: string
+ * $sqlCount: string
+ * $pdo: PDO = Connection::getPDO()
+ * PER_PAGE: int = 12
+ * 
+ * Methodes :
+ * getItems(): array
+ * previousPageLink(): ?string
+ * nextPageLink(): ?string
+ */
 
-$count = (int)$pdo->query('
-SELECT COUNT(category_id) 
+ $paginatedQuery = new PaginatedQuery("
+ SELECT p.* 
+ FROM post p
+ JOIN post_category pc ON pc.post_id = p.id
+ WHERE pc.category_id = " . $category->getID() . "
+ ORDER BY created_at DESC", 
+
+"SELECT COUNT(category_id) 
 FROM post_category
-WHERE category_id = ' . 
-$category->getID())
-->fetch(PDO::FETCH_NUM)[0];
+WHERE category_id = {$category->getID()}");
 
-$pages = ceil($count / PER_PAGE);
-$page = URL::getPositiveInt('page', 1);
-if($page > $pages){
-    throw new Exception('Cette page n\'existe pas');
-}
-$offset = $page > 1 ? $page * PER_PAGE - PER_PAGE : 0;
-$query = $pdo->query("
-SELECT p.* 
-FROM post p
-JOIN post_category pc ON pc.post_id = p.id
-WHERE pc.category_id = " . $category->getID() . "
-ORDER BY created_at 
-DESC LIMIT " . PER_PAGE . " OFFSET $offset");
-$posts = $query->fetchAll(PDO::FETCH_CLASS, Post::class);
+/** @var Post[] */
+$posts = $paginatedQuery->getItems(Post::class);
 $link = $router->url('category', ['id' => $category->getID(), 'slug' => $category->getSlug()]);
-
 ?>
 
 <h1><?= e($title) ?></h1>
@@ -73,17 +77,9 @@ $link = $router->url('category', ['id' => $category->getID(), 'slug' => $categor
 
 <div class="ant-row ant-row-space-between my-4">
     <div>
-        <?php if($page > 1): ?>
-            <?php 
-            $l = $link;
-            if($page > 2) $l .= "?page=" . ($page - 1);
-            ?>
-            <a href="<?= $link ?>" class="ant-btn ant-btn-primary">&laquo; Page précédente</a>
-        <?php endif ?>
+        <?= $paginatedQuery->previousLink($link) ?>
     </div>
     <div>
-        <?php if($page < $pages): ?>
-            <a href="<?= $link ?>?page=<?= $page + 1 ?>" class="ant-btn ant-btn-primary ant-btn-right">Page suivante &raquo;</a>
-        <?php endif ?>
+        <?= $paginatedQuery->nextLink($link) ?>
     </div>
 </div>
