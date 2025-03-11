@@ -1,4 +1,4 @@
-<div class="ant-card" style="flex: 1;">
+<div class="ant-card-bordered" style="flex: 1;">
     <div class="ant-card-body">
         <h2 class="ant-card-title"><?= $post->getName() ?></h2>
         <span class="ant-typography ant-typography-secondary">

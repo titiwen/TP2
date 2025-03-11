@@ -43,7 +43,6 @@ $categories = $query->fetchAll();
     ?>
 </span>
 <?php foreach($categories as $k => $category): ?>
-<?= $router->url('category', ['id' => $category->getID(), 'slug' => $category->getSlug()]); ?>
     <a href="<?= $router->url('category', ['id' => $category->getID(), 'slug' => $category->getSlug()]) ?>" class="ant-tag ant-tag-has-color ant-tag-blue"><?= e($category->getName()) ?></a>
 <?php endforeach; ?>
 <p>

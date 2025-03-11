@@ -2,6 +2,8 @@
 require "../vendor/autoload.php";
 
 define('DEBUG_TIME', microtime(true));
+define('PER_PAGE', 12);
+define('POST_LIMIT', 100);
 
 $whoops = new \Whoops\Run;
 $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);

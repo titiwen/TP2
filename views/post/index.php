@@ -7,10 +7,6 @@ use App\Connection;
 use App\URL;
 
 $title = "Mon Blog";
-
-define('PER_PAGE', 12);
-define('POST_LIMIT', 100);
-
 $pdo = Connection::getPDO();
 
 $page = $_GET['page'] ?? 1;
