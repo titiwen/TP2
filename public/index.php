@@ -2,7 +2,7 @@
 require "../vendor/autoload.php";
 
 define('DEBUG_TIME', microtime(true));
-define('PER_PAGE', 12);
+define('PER_PAGE', 15);
 define('POST_LIMIT', 100);
 
 $whoops = new \Whoops\Run;
