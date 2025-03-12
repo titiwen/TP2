@@ -1,11 +1,23 @@
+<?php
+$categories = [];
+foreach($post->getCategories() as $k => $category){
+    $url = $router->url('category', ['id' => $category->getID(), 'slug' => $category->getSlug()]);
+    $categories[] = <<<HTML
+    <a href="{$url}" class="ant-tag ant-tag-has-color ant-tag-blue">{$category->getName()}</a>
+HTML;   
+}
+
+?>
+
 <div class="ant-card-bordered" style="flex: 1;">
     <div class="ant-card-body">
         <h2 class="ant-card-title"><?= $post->getName() ?></h2>
-        <span class="ant-typography ant-typography-secondary">
             <?php 
-            echo $post->getCreatedAt()->format('d F Y');
-            ?>
-        </span>
+            echo $post->getCreatedAt()->format('d F Y');?>
+                <?php if(!empty($post->getCategories())): ?>
+                    ::
+                    <?= implode('', $categories) ?>
+                <?php endif ?>
         <p>
             <?php 
             echo $post->getExcerpt();
