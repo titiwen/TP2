@@ -2,6 +2,8 @@
 require "../vendor/autoload.php";
 
 define('DEBUG_TIME', microtime(true));
+define('PER_PAGE', 15);
+define('POST_LIMIT', 100);
 
 $whoops = new \Whoops\Run;
 $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
@@ -25,6 +27,6 @@ if(isset($_GET['page']) && $_GET['page'] === '1'){
 $router = new App\Router(dirname(__DIR__).'/views');
 $router
     ->get('/', 'post/index', 'home')
-    ->get('blog/[*:slug]-[i:id]', 'post/show', 'post')
-    ->get('/category', 'category/show', 'category')
+    ->get('/blog/category/[*:slug]-[i:id]', 'category/show', 'category')
+    ->get('/blog/[*:slug]-[i:id]', 'post/show', 'post')
     ->run();

@@ -1,55 +1,39 @@
 <?php 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-use App\Helpers\Text;
-use App\Model\Post;
 use App\Connection;
-use App\URL;
+use App\Table\PostTable;
 
 $title = "Mon Blog";
 
-define('PER_PAGE', 12);
-define('POST_LIMIT', 100);
-
 $pdo = Connection::getPDO();
 
-$page = $_GET['page'] ?? 1;
-$count = (int)$pdo->query('SELECT COUNT(id) FROM post')->fetch(PDO::FETCH_NUM)[0];
-$pages = ceil($count / PER_PAGE);
-$page = URL::getPositiveInt('page', 1);
-if($page > $pages){
-    throw new Exception('Cette page n\'existe pas');
-}
-$offset = $page > 1 ? $page * PER_PAGE - PER_PAGE : 0;
-$query = $pdo->query("SELECT * FROM post ORDER BY created_at DESC LIMIT " . PER_PAGE . " OFFSET $offset");
-$posts = $query->fetchAll(PDO::FETCH_CLASS, Post::class);
+$table = new PostTable($pdo);
+[$posts, $pagination] = $table->findPaginated();
+
+$link = $router->url('home');
 ?>
 
 <h1>Mon Blog</h1>
 
-<div class="container" >
+<div class="container">
     <div class="ant-row-gutter" style="display: flex; flex-wrap: wrap; clear: both;">
         <?php foreach ($posts as $post): ?>
-            <div class="ant-col ant-col-md-6 ant-col-lg-4">
+            <div class="ant-col ant-col-md-6 ant-col-lg-4"style="margin: 10px; ">
                 <?php require 'card.php' ?>
             </div>
         <?php endforeach; ?>
     </div>
+
+    <div class="pagination-container" style="margin-top: 20px;">
+        <div class="ant-row ant-row-space-between my-4">
+            <div>
+                <?= $pagination->previousLink($link) ?>
+            </div>
+            <div>
+                <?= $pagination->nextLink($link) ?>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="ant-row ant-row-space-between my-4">
-    <div>
-        <?php if($page > 1): ?>
-            <?php 
-            $link = $router->url('home');
-            if($page > 2) $link .= "?page=" . ($page - 1);
-            ?>
-            <a href="<?= $link ?>" class="ant-btn ant-btn-primary">&laquo; Page précédente</a>
-        <?php endif ?>
-    </div>
-    <div>
-        <?php if($page < $pages): ?>
-            <a href="<?= $router->url('home') ?>?page=<?= $page + 1 ?>" class="ant-btn ant-btn-primary ant-btn-right">Page suivante &raquo;</a>
-        <?php endif ?>
-    </div>
-</div>

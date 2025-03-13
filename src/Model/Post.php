@@ -40,4 +40,23 @@ class Post{
         return htmlentities($this->slug);
     }
 
+    public function getFormattedContent(): ?string
+    {
+        return nl2br(htmlentities($this->content));
+    }
+
+    /**
+     * return Category[]
+     */
+    public function getCategories(): array
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): void
+    {
+        $this->categories[] = $category;
+        $category->setPost($this);
+    }
+
 }
