@@ -3,6 +3,7 @@ namespace App\Table;
 
 use App\Model\Post;
 use App\PaginatedQuery;
+use Exception;
 
 final class PostTable extends Table
 {
@@ -10,6 +11,14 @@ final class PostTable extends Table
     protected $table = "post";
     protected $entity = Post::class;
 
+    public function delete(int $id){
+        $query = $this->pdo->prepare("DELETE FROM {$this->table} WHERE id = ?");
+        $ok = $query->execute([$id]);
+        if($ok === false){
+            throw new Exception("Impossible de supprimer l'enregistrement $id dans la table {$this->table}");
+        }
+
+    }
     public function findPaginated()
     {
         $paginatedQuery = new PaginatedQuery(
