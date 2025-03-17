@@ -3,7 +3,7 @@ require "../vendor/autoload.php";
 
 define('DEBUG_TIME', microtime(true));
 define('PER_PAGE', 15);
-define('POST_LIMIT', 100);
+define('POST_LIMIT', 60);
 
 $whoops = new \Whoops\Run;
 $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
@@ -30,7 +30,7 @@ $router
     ->get('/blog/category/[*:slug]-[i:id]', 'category/show', 'category')
     ->get('/blog/[*:slug]-[i:id]', 'post/show', 'post')
     ->get('/admin', 'admin/post/index', 'admin_posts')
-    ->get('/admin/post/[i:id]', 'admin/post/edit', 'admin_post')
+    ->match('/admin/post/[i:id]', 'admin/post/edit', 'admin_post')
     ->post('/admin/post/[i:id]/delete', 'admin/post/delete', 'admin_post_delete')
     ->get('/admin/post/new', 'admin/post/new', 'admin_post_new')
     ->run();

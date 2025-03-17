@@ -45,6 +45,11 @@ class Post{
         return nl2br(htmlentities($this->content));
     }
 
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
     /**
      * return Category[]
      */
@@ -57,6 +62,26 @@ class Post{
     {
         $this->categories[] = $category;
         $category->setPost($this);
+    }
+
+    public function setID(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function setSlug(string $slug): void
+    {
+        $this->slug = $slug;
+    }
+
+    public function setContent(string $content): void
+    {
+        $this->content = $content;
     }
 
 }

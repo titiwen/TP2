@@ -38,7 +38,7 @@ $pdo = Connection::getPDO();
                         </a>
                     </td>
                     <td class="ant-table-cell">
-                        <a href="<?= $router->url('admin_post_new', ['id' => $post->getID()]) ?>" class="ant-btn ant-btn-primary">
+                        <a href="<?= $router->url('admin_post', ['id' => $post->getID()]) ?>" class="ant-btn ant-btn-primary">
                             Editer
                         </a>
                         <form action="<?= $router->url('admin_post_delete', ['id' => $post->getID()]) ?>"method="POST"

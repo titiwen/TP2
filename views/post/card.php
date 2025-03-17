@@ -20,7 +20,7 @@ HTML;
                 <?php endif ?>
         <p>
             <?php 
-            echo $post->getExcerpt();
+                echo $post->getExcerpt();
             ?>
         </p>
         <?php if(strlen($post->getExcerpt()) > POST_LIMIT): ?>

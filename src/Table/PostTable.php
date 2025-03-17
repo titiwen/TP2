@@ -54,4 +54,19 @@ final class PostTable extends Table
         (new CategoryTable($this->pdo))->hydratePosts($posts);
         return [$posts, $paginatedQuery];
     }
+
+    public function update(Post $post): void
+    {
+        $query = $this->pdo->prepare("UPDATE {$this->table} SET name = :name, slug = :slug, content = :content, created_at = :created_at WHERE id = :id");
+        $ok = $query->execute([
+            'name' => $post->getName(),
+            'slug' => $post->getSlug(),
+            'content' => $post->getContent(),
+            'created_at' => $post->getCreatedAt()->format('Y-m-d H:i:s'),
+            'id' => $post->getId()
+        ]);
+        if($ok === false){
+            throw new Exception("Impossible de modifier l'enregistrement {$post->getId()} dans la table {$this->table}");
+        }
+    }
 }
