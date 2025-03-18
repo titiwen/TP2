@@ -12,6 +12,16 @@ class Post{
     private $created_at;
     private $categories = [];
 
+
+
+    public function addCategory(Category $category): void
+    {
+        $this->categories[] = $category;
+        $category->setPost($this);
+    }
+
+    //GETTERS
+
     public function getID(): ?int
     {
         return $this->id;
@@ -58,11 +68,7 @@ class Post{
         return $this->categories;
     }
 
-    public function addCategory(Category $category): void
-    {
-        $this->categories[] = $category;
-        $category->setPost($this);
-    }
+    //SETTERS
 
     public function setID(int $id): void
     {
@@ -77,6 +83,11 @@ class Post{
     public function setSlug(string $slug): void
     {
         $this->slug = $slug;
+    }
+
+    public function setCreatedAt(string $created_at): void
+    {
+        $this->created_at = $created_at;
     }
 
     public function setContent(string $content): void

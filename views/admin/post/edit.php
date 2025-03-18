@@ -3,6 +3,9 @@
 use App\Connection;
 use App\Table\PostTable;
 use App\Validator;
+use App\HTML\Form;
+use App\Model\Post;
+use App\Validators\PostValidator;
 
 $pdo = Connection::getPDO();
 $postTable = new PostTable($pdo);
@@ -12,17 +15,13 @@ $errors = [];
 
 if(!empty($_POST)){
     Validator::lang('fr');
-    $v = new Validator($_POST);
-    $v->labels(array(
-        'name' => 'Titre',
-        'slug' => 'URL',
-        'content' => 'Contenu'
-    ));
-    $v
-    ->rule('required', ['name'])
-    ->rule('lengthBetween', 'name', 3, 200);
+    $v = new PostValidator($_POST, $postTable, $post->getID());
 
     if($v->validate()){
+        $post->setName($_POST['name']);
+        $post->setSlug($_POST['slug']);
+        $post->setContent($_POST['content']);
+        $post->setCreatedAt($_POST['created_at']);   
         $postTable->update($post);
         $success = true;
     }else{
@@ -30,6 +29,8 @@ if(!empty($_POST)){
     }
     
 }
+
+$form = new Form($post, $errors);
 
 ?>
 
@@ -45,35 +46,15 @@ if(!empty($_POST)){
     </div>
 <?php endif ?>
 
-<h1>Editer l'article n°<?= e($post->getID()) ?></h1>
+<h1>Editer l'article n°<?= htmlspecialchars($post->getID(), ENT_QUOTES, 'UTF-8') ?></h1>
+
 
 <form action="" method="POST">
-    <div class="ant-form-item">
-        <label for="name">Titre</label>
-        <input type="text" name="name" id="name" class="ant-input <?= isset($errors['name']) ? 'ant-input-status-error' : '' ?>" value="<?= e($post->getName()) ?>" required>
-        <?php if(isset($errors['name'])): ?>
-            <div class="ant-form-item-explain">
-                <?= implode('<br>', $errors['name']) ?>
-            </div>
-        <?php endif ?>
-    </div>
-    <div class="ant-form-item">
-        <label for="slug">URL</label>
-        <input type="text" name="slug" id="slug" class="ant-input <?= isset($errors['slug']) ? 'ant-input-status-error' : '' ?>" value="<?= e($post->getSlug()) ?>" required>
-        <?php if(isset($errors['slug'])): ?>
-            <div class="ant-form-item-explain">
-                <?= implode('<br>', $errors['slug']) ?>
-            </div>
-        <?php endif ?>
-    </div>
-    <div class="ant-form-item">
-        <label for="content">Contenu</label>
-        <textarea name="content" id="content" class="ant-input <?= isset($errors['content']) ? 'ant-input-status-error' : '' ?>" required><?= e($post->getContent()) ?></textarea>
-        <?php if(isset($errors['content'])): ?>
-            <div class="ant-form-item-explain">
-                <?= implode('<br>', $errors['content']) ?>
-            </div>
-        <?php endif ?>
-    </div>
+
+    <?= $form->input('name', 'Titre') ?>
+    <?= $form->input('slug', 'URL') ?>
+    <?= $form->textarea('content', 'Contenu') ?>
+    <?= $form->input('created_at', 'Date de création') ?>
+    
     <button class="ant-btn ant-btn-primary">Modifier</button>
 </form>
