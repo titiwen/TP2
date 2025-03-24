@@ -15,7 +15,7 @@ class Form{
     }
 
     public function input(string $key, string $label): string{
-        $value = $this->getvalue($key);
+        $value = $this->getValue($key);
         return <<<HTML
             <div class="ant-form-item">
                 <label for="field{$key}">{$label}</label>
@@ -26,7 +26,7 @@ HTML;
     }
 
     public function textarea(string $key, string $label): string{
-        $value = $this->getvalue($key);
+        $value = $this->getValue($key);
         return <<<HTML
             <div class="ant-form-item">
                 <label for="field{$key}">{$label}</label>
@@ -40,14 +40,15 @@ return "";
 
     private function getValue(string $key): string{
         if(is_array($this->data)){
-            return $this->data[$key] ?? null;
+            $value = $this->data[$key] ?? null;
+        } else {
+            $method = 'get' . str_replace(' ','',ucwords(str_replace('_',' ',$key)));
+            $value = method_exists($this->data, $method) ? $this->data->$method() : null;
+            if($value instanceof \DateTimeInterface){
+                return $value->format('Y-m-d H:i:s');
+            }
         }
-        $method = 'get' . str_replace(' ','',ucwords(str_replace('_',' ',$key)));
-        $value = $this->data->$method();
-        if($value instanceof \DateTimeInterface){
-            return $value->format('Y-m-d H:i:s');
-        }
-        return $value;
+        return $value !== null ? (string) $value : '';
     }
 
     private function getInputClass(string $key): string{

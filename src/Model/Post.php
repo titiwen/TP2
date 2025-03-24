@@ -32,14 +32,6 @@ class Post{
         return htmlentities($this->name);
     }
 
-    public function getExcerpt(): ?string
-    {
-        if($this->content === null){
-            return null;
-        }
-        return nl2br(htmlentities(Text::excerpt($this->content, POST_LIMIT) . '...'));
-    }
-
     public function getCreatedAt(): DateTime
     {
         return new DateTime($this->created_at);
@@ -58,6 +50,14 @@ class Post{
     public function getContent(): ?string
     {
         return $this->content;
+    }
+
+    public function getExcerpt(): ?string
+    {
+        if($this->content === null){
+            return null;
+        }
+        return nl2br(htmlentities(Text::excerpt($this->content, 60)));
     }
 
     /**

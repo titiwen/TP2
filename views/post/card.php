@@ -23,7 +23,7 @@ HTML;
                 echo $post->getExcerpt();
             ?>
         </p>
-        <?php if(strlen($post->getExcerpt()) > POST_LIMIT): ?>
+        <?php if(strlen($post->getContent()) > POST_LIMIT): ?>
             <p><a href="<?= $router->url('post',['id'=>$post->getId(), 'slug' => $post->getSlug()])?>">Lire la suite</a></p>
         <?php endif ?>
     </div>

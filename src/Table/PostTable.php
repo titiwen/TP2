@@ -19,6 +19,7 @@ final class PostTable extends Table
         }
 
     }
+    
     public function findPaginated()
     {
         $paginatedQuery = new PaginatedQuery(
@@ -68,5 +69,20 @@ final class PostTable extends Table
         if($ok === false){
             throw new Exception("Impossible de modifier l'enregistrement {$post->getId()} dans la table {$this->table}");
         }
+    }
+
+    public function add(Post $post): void
+    {
+        $query = $this->pdo->prepare("INSERT INTO {$this->table} (name, slug, content, created_at) VALUES (:name, :slug, :content, :created_at)");
+        $ok = $query->execute([
+            'name' => $post->getName(),
+            'slug' => $post->getSlug(),
+            'content' => $post->getContent(),
+            'created_at' => $post->getCreatedAt()->format('Y-m-d H:i:s')
+        ]);
+        if ($ok === false) {
+            throw new Exception("Impossible d'ajouter un nouvel enregistrement dans la table {$this->table}");
+        }
+        $post->setId((int)$this->pdo->lastInsertId());
     }
 }

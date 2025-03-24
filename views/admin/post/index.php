@@ -5,10 +5,11 @@ use App\Connection;
 
 Auth::check();
 
+$router->layout = 'admin/layouts/default';
 $title = "Admin";
 $pdo = Connection::getPDO();
 [$posts, $pagination] = (new \App\Table\PostTable($pdo))->findPaginated();
- $link = $router->url('admin_posts');
+$link = $router->url('admin_posts');
 ?>
 
 <?php if(isset($_GET['delete'])): ?>
@@ -21,9 +22,13 @@ $pdo = Connection::getPDO();
     <table class="ant-table" style=" width: 70%;">
         <thead class="ant-table-thead">
             <tr>
-                <th class="ant-table-cell">Titre</th>
-                <th class="ant-table-cell">Actions</th>
                 <th class="ant-table-cell">#ID</th>
+                <th class="ant-table-cell">Titre</th>
+                <th class="ant-table-cell">
+                    <a href="<?= $router->url('admin_post_new') ?>">
+                        Créer un article
+                    </a>
+                </th>
             </tr>
         </thead>
         <tbody class="ant-table-tbody">

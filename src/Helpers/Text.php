@@ -9,6 +9,9 @@ class Text {
             return $content;
         }
         $lastSpace = mb_strpos($content, ' ', $limit);
+        if ($lastSpace === false) {
+            return mb_substr($content, 0, $limit) . '...';
+        }
         return mb_substr($content, 0, $lastSpace) . '...';
     }
 }
