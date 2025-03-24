@@ -21,7 +21,10 @@ if (!empty($_POST)) {
     $v = new CategoryValidator($_POST, $table);
     CustomObject::hydrate($category, $_POST, ['name', 'slug']);
     if ($v->validate()) {
-        $table->add($category);
+        $table->add([
+            'name' => $category->getName(),
+            'slug' => $category->getSlug()
+        ]);
         $success = true;
         header('Location: ' . $router->url('admin_categories') . '?created=1');
         exit();

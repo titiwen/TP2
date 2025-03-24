@@ -25,7 +25,7 @@ if(!empty($_POST)){
         $post->setSlug($_POST['slug']);
         $post->setContent($_POST['content']);
         $post->setCreatedAt($_POST['created_at']);   
-        $postTable->update($post);
+        $postTable->updatePost($post);
         $success = true;
     }else{
         $errors = $v->errors();

@@ -3,7 +3,7 @@
     <?= $form->input('name', 'Titre') ?>
     <?= $form->input('slug', 'URL') ?>
     
-    <button href="<?= $router->url('admin_categories') ?>" class="ant-btn ant-btn-primary">
+    <button  class="ant-btn ant-btn-primary">
         <?php if($category->getID() !== null): ?>
             Modifier
         <?php else: ?>

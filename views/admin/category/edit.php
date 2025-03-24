@@ -21,7 +21,10 @@ if (!empty($_POST)) {
 
     if ($v->validate()) {
         CustomObject::hydrate($category, $_POST, $fields);
-        $table->update($category);
+        $table->update([
+            'name' => $category->getName(),
+            'slug' => $category->getSlug()
+        ], $category->getID());
         $success = true;
     } else {
         $errors = $v->errors();

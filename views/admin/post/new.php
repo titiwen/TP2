@@ -20,7 +20,7 @@ if (!empty($_POST)) {
     $v = new PostValidator($_POST, $table);
     if ($v->validate()) {
         CustomObject::hydrate($post, $_POST, ['name', 'slug', 'content', 'created_at']);
-        $table->add($post);
+        $table->addPost($post);
         $success = true;
 
         // Réinitialiser l'objet $post pour vider le formulaire
