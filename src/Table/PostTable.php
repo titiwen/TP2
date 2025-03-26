@@ -3,12 +3,44 @@ namespace App\Table;
 
 use App\Model\Post;
 use App\PaginatedQuery;
+use Exception;
 
 final class PostTable extends Table
 {
 
     protected $table = "post";
     protected $entity = Post::class;
+    
+    public function updatePost(Post $post): void
+    {
+        $this->update([
+            'id' => $post->getId(),
+            'name' => $post->getName(),
+            'slug' => $post->getSlug(),
+            'content' => $post->getContent(),
+            'created_at' => $post->getCreatedAt()->format('Y-m-d H:i:s')
+        ], $post->getId());
+    }
+
+    public function addPost(Post $post): void
+    {
+        $id = $this->add([
+            'name' => $post->getName(),
+            'slug' => $post->getSlug(),
+            'content' => $post->getContent(),
+            'created_at' => $post->getCreatedAt()->format('Y-m-d H:i:s')
+        ]);
+        $post->setId($id);
+    }
+
+    public function attachCategories(int $id, array $categories): void
+    {
+        $this->pdo->exec("DELETE FROM post_category WHERE post_id = {$id}");
+        $query = $this->pdo->prepare("INSERT INTO post_category SET post_id = ?, category_id = ?");
+        foreach ($categories as $category) {
+            $query->execute([$id, $category]);
+        }
+    }
 
     public function findPaginated()
     {

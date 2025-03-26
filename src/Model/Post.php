@@ -12,6 +12,16 @@ class Post{
     private $created_at;
     private $categories = [];
 
+
+
+    public function addCategory(Category $category): void
+    {
+        $this->categories[] = $category;
+        $category->setPost($this);
+    }
+
+    //GETTERS
+
     public function getID(): ?int
     {
         return $this->id;
@@ -20,14 +30,6 @@ class Post{
     public function getName(): ?string
     {
         return htmlentities($this->name);
-    }
-
-    public function getExcerpt(): ?string
-    {
-        if($this->content === null){
-            return null;
-        }
-        return nl2br(htmlentities(Text::excerpt($this->content, POST_LIMIT) . '...'));
     }
 
     public function getCreatedAt(): DateTime
@@ -45,6 +47,19 @@ class Post{
         return nl2br(htmlentities($this->content));
     }
 
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
+    public function getExcerpt(): ?string
+    {
+        if($this->content === null){
+            return null;
+        }
+        return nl2br(htmlentities(Text::excerpt($this->content, 60)));
+    }
+
     /**
      * return Category[]
      */
@@ -53,10 +68,46 @@ class Post{
         return $this->categories;
     }
 
-    public function addCategory(Category $category): void
+    public function getCategoriesIds(): array
     {
-        $this->categories[] = $category;
-        $category->setPost($this);
+        $ids = [];
+        foreach($this->categories as $category){
+            $ids[] = $category->getID();
+        }
+        return $ids;
+    }
+
+    //SETTERS
+
+    public function setID(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function setSlug(string $slug): void
+    {
+        $this->slug = $slug;
+    }
+
+    public function setCreatedAt(string $created_at): void
+    {
+        $this->created_at = $created_at;
+    }
+
+    public function setContent(string $content): void
+    {
+        $this->content = $content;
+    }
+
+    public function setCategories(array $categories): self
+    {
+        $this->categories = $categories;
+        return $this;
     }
 
 }
