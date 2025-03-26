@@ -5,6 +5,7 @@ use App\Connection;
 use App\CustomObject;
 use App\HTML\Form;
 use App\Model\Post;
+use App\Table\CategoryTable;
 use App\Table\PostTable;
 use App\Validators\PostValidator;
 
@@ -12,15 +13,23 @@ Auth::check();
 
 $pdo = Connection::getPDO();
 $table = new PostTable($pdo);
+$categoryTable = new CategoryTable($pdo);
+$categories = $categoryTable->list();
 $post = new Post();
 $success = false;
 $errors = [];
 
 if (!empty($_POST)) {
-    $v = new PostValidator($_POST, $table);
+    $v = new PostValidator($_POST, $table, null, $categories);
+    CustomObject::hydrate($post, $_POST, ['name', 'slug', 'content', 'created_at']);
     if ($v->validate()) {
-        CustomObject::hydrate($post, $_POST, ['name', 'slug', 'content', 'created_at']);
+        $pdo->beginTransaction();  
         $table->addPost($post);
+        $table->attachCategories($post->getID(), $_POST['categories_ids']);
+        $pdo->commit();
+
+        header('Location: ' . $router->url('admin_post', ['id' => $post->getID()]) . '?created=1');
+        exit();
         $success = true;
 
         // Réinitialiser l'objet $post pour vider le formulaire

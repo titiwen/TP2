@@ -2,30 +2,32 @@
 
 use App\Auth;
 use App\Connection;
+use App\CustomObject;
 use App\Table\PostTable;
-use App\Validator;
 use App\HTML\Form;
-use App\Model\Post;
+use App\Table\CategoryTable;
 use App\Validators\PostValidator;
 
 Auth::check();
 
 $pdo = Connection::getPDO();
 $postTable = new PostTable($pdo);
+$categoryTable = new CategoryTable($pdo);
+$categories = $categoryTable->list();
 $post = $postTable->find($params['id']);
+$categoryTable->hydratePosts([$post]);
 $success = false;
 $errors = [];
 
 if(!empty($_POST)){
-    Validator::lang('fr');
-    $v = new PostValidator($_POST, $postTable, $post->getID());
-
+    $v = new PostValidator($_POST, $postTable, $post->getID(), $categories);
+    CustomObject::hydrate($post, $_POST, ['name', 'slug', 'content', 'created_at']);
     if($v->validate()){
-        $post->setName($_POST['name']);
-        $post->setSlug($_POST['slug']);
-        $post->setContent($_POST['content']);
-        $post->setCreatedAt($_POST['created_at']);   
+        $pdo->beginTransaction();  
         $postTable->updatePost($post);
+        $postTable->attachCategories($post->getID(), $_POST['categories_ids']);
+        $pdo->commit();
+        $categoryTable->hydratePosts([$post]);
         $success = true;
     }else{
         $errors = $v->errors();

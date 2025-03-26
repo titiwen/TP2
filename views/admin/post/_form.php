@@ -3,6 +3,7 @@
     <?= $form->input('name', 'Titre') ?>
     <?= $form->input('slug', 'URL') ?>
     <?= $form->textarea('content', 'Contenu') ?>
+    <?= $form->select('categories_ids', "Catégories", $categories) ?>
     <?= $form->input('created_at', 'Date de création') ?>
     
     <button class="ant-btn ant-btn-primary">

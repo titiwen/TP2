@@ -68,6 +68,15 @@ class Post{
         return $this->categories;
     }
 
+    public function getCategoriesIds(): array
+    {
+        $ids = [];
+        foreach($this->categories as $category){
+            $ids[] = $category->getID();
+        }
+        return $ids;
+    }
+
     //SETTERS
 
     public function setID(int $id): void
@@ -93,6 +102,12 @@ class Post{
     public function setContent(string $content): void
     {
         $this->content = $content;
+    }
+
+    public function setCategories(array $categories): self
+    {
+        $this->categories = $categories;
+        return $this;
     }
 
 }

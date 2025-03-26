@@ -30,7 +30,7 @@
             <div class="logo" style="float: left; width: 120px; height: 31px; margin: 16px 24px 16px 0; background: rgba(255, 255, 255, 0.2);"></div>
             <div class="ant-menu ant-menu-dark ant-menu-horizontal" style="line-height: 64px;">
                 <a href="/" class="ant-menu-item" style="display: inline-block;">Blog</a>
-                <div class="ant-menu-submenu" style="display: inline-block; position: relative; z-index: 1000;">
+                <div class="ant-menu-item ant-menu-submenu" style="display: inline-block; position: relative; z-index: 1000;">
                     <span class="ant-menu-submenu-title" style="cursor: pointer;">Admin</span>
                     <ul class="ant-menu ant-menu-sub" style="position: absolute; top: 100%; left: 0; display: none; background: #001529; padding: 0; list-style: none; z-index: 1000;">
                         <li class="ant-menu-item" style="padding: 10px; margin: 10px;">
@@ -40,6 +40,11 @@
                             <a href="<?= $router->url('admin_categories') ?>" style="color: #fff; text-decoration: none;">Catégories</a>
                         </li>
                     </ul>
+                </div>
+                <div style="float: right; margin-right: 24px;">
+                    <form action="<?= $router->url('logout') ?>" method="post" class="ant-menu-item" style="cursor: pointer;display: inline-block;">
+                        <button type="submit" class="ant-btn ant-btn-link" style="color: #fff; text-decoration: none;">Se déconnecter</button>
+                    </form>
                 </div>
                 <script>
                     document.querySelector('.ant-menu-submenu-title').addEventListener('mouseover', function() {
